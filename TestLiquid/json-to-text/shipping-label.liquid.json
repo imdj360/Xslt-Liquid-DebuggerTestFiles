@@ -1,0 +1,54 @@
+{
+  "shipment": {
+    "orderNumber": "ORD-20240315-8821",
+    "trackingNumber": "1Z999AA10123456784",
+    "shipDate": "2024-03-15",
+    "carrier": "UPS",
+    "service": "express",
+    "specialInstructions": "Leave at door if no answer",
+    "sender": {
+      "name": "Contoso Warehouse",
+      "address": {
+        "line1": "100 Industrial Blvd",
+        "city": "Phoenix",
+        "state": "AZ",
+        "zip": "85001"
+      }
+    },
+    "recipient": {
+      "name": "Sarah Connor",
+      "company": "",
+      "address": {
+        "line1": "742 Evergreen Terrace",
+        "line2": "Apt 3B",
+        "city": "Springfield",
+        "state": "IL",
+        "zip": "62704",
+        "country": "US"
+      }
+    },
+    "items": [
+      {
+        "sku": "kbd-wl-blk",
+        "description": "Wireless Keyboard (Black)",
+        "quantity": 1,
+        "weightKg": 0.85,
+        "fragile": false
+      },
+      {
+        "sku": "hub-usbc-7p",
+        "description": "USB-C Hub 7-Port",
+        "quantity": 2,
+        "weightKg": 0.32,
+        "fragile": false
+      },
+      {
+        "sku": "mon-stand-alum",
+        "description": "Aluminium Monitor Stand",
+        "quantity": 1,
+        "weightKg": 2.10,
+        "fragile": true
+      }
+    ]
+  }
+}

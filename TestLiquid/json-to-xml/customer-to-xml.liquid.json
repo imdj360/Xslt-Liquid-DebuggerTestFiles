@@ -1,0 +1,39 @@
+{
+  "customer": {
+    "id": "CUST-00441",
+    "firstName": "James",
+    "lastName": "Holt",
+    "email": "james.holt@fabrikam.com",
+    "phone": "+1-206-555-0192",
+    "company": "Fabrikam Ltd",
+    "memberSince": "2019-03-12",
+    "annualSpend": 24750.00,
+    "currency": "USD",
+    "tags": "wholesale, net-30, preferred-vendor",
+    "addresses": [
+      {
+        "type": "BILLING",
+        "line1": "1 Microsoft Way",
+        "line2": "Suite 900",
+        "city": "Redmond",
+        "state": "WA",
+        "postalCode": "98052",
+        "country": "US"
+      },
+      {
+        "type": "SHIPPING",
+        "line1": "500 Oracle Pkwy",
+        "line2": "",
+        "city": "Redwood City",
+        "state": "CA",
+        "postalCode": "94065",
+        "country": "US"
+      }
+    ],
+    "preferences": {
+      "contactMethod": "email",
+      "newsletter": true,
+      "locale": "en-US"
+    }
+  }
+}

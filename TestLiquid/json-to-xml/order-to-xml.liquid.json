@@ -1,0 +1,16 @@
+{
+  "orderId": "PO-2024-001",
+  "orderDate": "2024-01-15",
+  "customer": {
+    "name": "Contoso Ltd",
+    "address": "123 Main St",
+    "city": "Seattle",
+    "state": "WA",
+    "country": "USA"
+  },
+  "items": [
+    { "sku": "PROD-001", "name": "Widget A", "quantity": 5, "unitPrice": 9.99 },
+    { "sku": "PROD-002", "name": "Widget B", "quantity": 2, "unitPrice": 24.99 },
+    { "sku": "PROD-003", "name": "Widget C", "quantity": 10, "unitPrice": 4.50 }
+  ]
+}

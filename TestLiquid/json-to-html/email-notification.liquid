@@ -1,0 +1,93 @@
+{%- comment -%}
+  Template: email-notification.liquid
+  Target: DotLiquid 2.0.361 (Azure Logic Apps Standard)
+  Description: HTML — order confirmation email body
+  Input: content.* (Logic Apps wrapper)
+{%- endcomment -%}
+{%- assign order = content.order -%}
+{%- assign subtotal = 0 -%}
+{%- for item in order.items -%}
+  {%- assign lineTotal = item.quantity | Times: item.unitPrice -%}
+  {%- assign subtotal = subtotal | Plus: lineTotal -%}
+{%- endfor -%}
+{%- assign discount = subtotal | Times: order.discountPct | DividedBy: 100 -%}
+{%- assign afterDiscount = subtotal | Minus: discount -%}
+{%- assign tax = afterDiscount | Times: order.taxRate -%}
+{%- assign grandTotal = afterDiscount | Plus: tax -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation — {{ order.orderNumber }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; }
+    h1 { color: #0078d4; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th { background: #f3f3f3; text-align: left; padding: 8px; border-bottom: 2px solid #ddd; }
+    td { padding: 8px; border-bottom: 1px solid #eee; }
+    .total-row td { font-weight: bold; border-top: 2px solid #ddd; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+    .badge-standard { background: #e8f4fd; color: #0078d4; }
+    .badge-priority { background: #fff4ce; color: #8a6914; }
+    .badge-express  { background: #fde8e8; color: #c0392b; }
+  </style>
+</head>
+<body>
+  <h1>Order Confirmation</h1>
+  <p>Hi {{ order.customer.firstName }},</p>
+  <p>Thank you for your order. Here is your summary:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for item in order.items -%}
+      {%- assign lineTotal = item.quantity | Times: item.unitPrice -%}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ item.unitPrice | Round: 2 }}</td>
+        <td>${{ lineTotal | Round: 2 }}</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+    <tfoot>
+      <tr><td colspan="3">Subtotal</td><td>${{ subtotal | Round: 2 }}</td></tr>
+      {%- if order.discountPct > 0 -%}
+      <tr><td colspan="3">Discount ({{ order.discountPct }}%)</td><td>-${{ discount | Round: 2 }}</td></tr>
+      {%- endif -%}
+      <tr><td colspan="3">Tax ({{ order.taxRate | Times: 100 | Round: 1 }}%)</td><td>${{ tax | Round: 2 }}</td></tr>
+      <tr class="total-row"><td colspan="3">Grand Total</td><td>${{ grandTotal | Round: 2 }}</td></tr>
+    </tfoot>
+  </table>
+
+  <p>
+    <strong>Shipping method:</strong>
+    {%- if order.shipping == "express" -%}
+    <span class="badge badge-express">Express (1–2 days)</span>
+    {%- elsif order.shipping == "priority" -%}
+    <span class="badge badge-priority">Priority (3–5 days)</span>
+    {%- else -%}
+    <span class="badge badge-standard">Standard (5–10 days)</span>
+    {%- endif -%}
+  </p>
+
+  <p><strong>Shipping to:</strong><br>
+    {{ order.shippingAddress.line1 }}<br>
+    {%- if order.shippingAddress.line2 != blank -%}
+    {{ order.shippingAddress.line2 }}<br>
+    {%- endif -%}
+    {{ order.shippingAddress.city }}, {{ order.shippingAddress.state }} {{ order.shippingAddress.zip }}<br>
+    {{ order.shippingAddress.country }}
+  </p>
+
+  <p>Questions? Reply to this email or contact <a href="mailto:{{ order.supportEmail }}">{{ order.supportEmail }}</a>.</p>
+  <p>— The {{ order.storeName }} Team</p>
+</body>
+</html>

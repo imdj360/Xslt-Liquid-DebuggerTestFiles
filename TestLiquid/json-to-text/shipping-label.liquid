@@ -1,0 +1,65 @@
+{%- comment -%}
+  Template: shipping-label.liquid
+  Target: DotLiquid 2.0.361 (Azure Logic Apps Standard)
+  Description: Plain text — shipping label + packing slip for warehouse printer
+  Input: content.* (Logic Apps wrapper)
+{%- endcomment -%}
+{%- assign shipment = content.shipment -%}
+{%- assign itemCount = shipment.items | Size -%}
+{%- assign totalQty = 0 -%}
+{%- assign totalWeight = 0 -%}
+{%- for item in shipment.items -%}
+  {%- assign totalQty    = totalQty    | Plus: item.quantity -%}
+  {%- assign itemWeight  = item.weightKg | Times: item.quantity -%}
+  {%- assign totalWeight = totalWeight  | Plus: itemWeight -%}
+{%- endfor -%}
+{%- assign isFragile   = false -%}
+{%- for item in shipment.items -%}
+  {%- if item.fragile == true -%}{%- assign isFragile = true -%}{%- endif -%}
+{%- endfor -%}
+{%- assign serviceLabel = "STANDARD" -%}
+{%- if shipment.service == "overnight" -%}
+  {%- assign serviceLabel = "OVERNIGHT — PRIORITY" -%}
+{%- elsif shipment.service == "express" -%}
+  {%- assign serviceLabel = "EXPRESS 2-DAY" -%}
+{%- endif -%}
+================================================================================
+  {{ shipment.carrier | Upcase }} SHIPPING LABEL
+  {{ serviceLabel }}
+================================================================================
+
+  TRACKING:  {{ shipment.trackingNumber }}
+  SHIP DATE: {{ shipment.shipDate }}
+
+  FROM:
+    {{ shipment.sender.name }}
+    {{ shipment.sender.address.line1 }}
+    {{ shipment.sender.address.city }}, {{ shipment.sender.address.state }} {{ shipment.sender.address.zip }}
+
+  TO:
+    {{ shipment.recipient.name }}
+    {% if shipment.recipient.company != blank %}{{ shipment.recipient.company }}
+    {% endif %}{{ shipment.recipient.address.line1 }}
+    {%- if shipment.recipient.address.line2 != blank %}
+    {{ shipment.recipient.address.line2 }}
+    {%- endif %}
+    {{ shipment.recipient.address.city }}, {{ shipment.recipient.address.state }} {{ shipment.recipient.address.zip }}
+    {{ shipment.recipient.address.country }}
+
+--------------------------------------------------------------------------------
+  PACKING SLIP — ORDER {{ shipment.orderNumber }}
+--------------------------------------------------------------------------------
+{% for item in shipment.items %}
+  [{{ item.quantity }}x]  {{ item.sku | Upcase | Prepend: "#" }}  {{ item.description }}
+        Weight: {{ item.weightKg }}kg each{% if item.fragile %}  *** FRAGILE ***{% endif %}
+{%- endfor %}
+
+--------------------------------------------------------------------------------
+  TOTALS:  {{ itemCount }} line(s)   {{ totalQty }} unit(s)   {{ totalWeight | Round: 2 }}kg total
+{%- if isFragile %}
+  *** HANDLE WITH CARE — FRAGILE CONTENTS ***
+{%- endif %}
+{%- if shipment.specialInstructions != blank %}
+  NOTE: {{ shipment.specialInstructions }}
+{%- endif %}
+================================================================================

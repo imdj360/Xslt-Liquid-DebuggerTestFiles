@@ -1,0 +1,17 @@
+{
+  "invoice": {
+    "number": "INV-2024-0042",
+    "date": "2024-01-20",
+    "dueDate": "2024-02-20",
+    "vendor": {
+      "name": "Fabrikam Inc",
+      "vatNumber": "GB123456789",
+      "email": "billing@fabrikam.com"
+    },
+    "lines": [
+      { "description": "Consulting services", "quantity": 8, "rate": 150.00 },
+      { "description": "Code review", "quantity": 4, "rate": 125.00 },
+      { "description": "Travel expenses", "quantity": 1, "rate": 250.00 }
+    ]
+  }
+}

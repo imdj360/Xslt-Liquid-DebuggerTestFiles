@@ -1,0 +1,41 @@
+{%- comment -%}
+  Template: order-to-xml.liquid
+  Target: DotLiquid 2.0.361 (Azure Logic Apps Standard)
+  Description: JSON-to-XML — convert purchase order JSON to XML for B2B/EDI
+  Input: content.* (Logic Apps wrapper)
+{%- endcomment -%}
+{%- assign itemCount = content.items | Size -%}
+{%- assign subTotal = 0 -%}
+{%- for item in content.items -%}
+  {%- assign lineTotal = item.quantity | Times: item.unitPrice -%}
+  {%- assign subTotal = subTotal | Plus: lineTotal -%}
+{%- endfor -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<PurchaseOrder xmlns="urn:schemas-biztalk-org:po">
+  <OrderId>{{ content.orderId }}</OrderId>
+  <OrderDate>{{ content.orderDate }}</OrderDate>
+  <Customer>
+    <Name>{{ content.customer.name }}</Name>
+    <Address>
+      <Street>{{ content.customer.address }}</Street>
+      <City>{{ content.customer.city }}</City>
+      <State>{{ content.customer.state }}</State>
+      <Country>{{ content.customer.country }}</Country>
+    </Address>
+  </Customer>
+  <Items count="{{ itemCount }}">
+    {%- for item in content.items -%}
+    <Item>
+      <SKU>{{ item.sku }}</SKU>
+      <Name>{{ item.name }}</Name>
+      <Quantity>{{ item.quantity }}</Quantity>
+      <UnitPrice>{{ item.unitPrice }}</UnitPrice>
+      <LineTotal>{{ item.quantity | Times: item.unitPrice }}</LineTotal>
+    </Item>
+    {%- endfor -%}
+  </Items>
+  <Summary>
+    <ItemCount>{{ itemCount }}</ItemCount>
+    <SubTotal>{{ subTotal }}</SubTotal>
+  </Summary>
+</PurchaseOrder>

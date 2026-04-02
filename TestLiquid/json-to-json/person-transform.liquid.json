@@ -1,0 +1,9 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "dateOfBirth": "1990-05-15",
+  "department": "Engineering",
+  "salary": 75000,
+  "email": "JOHN.DOE@CONTOSO.COM",
+  "active": true
+}

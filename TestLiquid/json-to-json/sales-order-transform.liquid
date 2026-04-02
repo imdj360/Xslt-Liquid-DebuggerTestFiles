@@ -1,0 +1,148 @@
+{%- comment -%}
+  Template: sales-order-transform.liquid
+  Target: DotLiquid 2.0.361 (Azure Logic Apps Standard)
+  Description: Complex B2B sales order mapping — discounts, category subtotals,
+               tax by state, coupon resolution, SLA and carrier lookup.
+  Input: content.* (Logic Apps wrapper)
+{%- endcomment -%}
+
+{%- comment -%} ── Coupon → extra discount % ─────────────────────────────── {%- endcomment -%}
+{%- assign couponDiscount = 0 -%}
+{%- if content.couponCode == "WINTER20" -%}{%- assign couponDiscount = 20 -%}
+{%- elsif content.couponCode == "SAVE10" -%}{%- assign couponDiscount = 10 -%}
+{%- elsif content.couponCode == "VIP15" -%}{%- assign couponDiscount = 15 -%}
+{%- endif -%}
+
+{%- comment -%} ── Priority → SLA hours ──────────────────────────────────── {%- endcomment -%}
+{%- assign slaHours = 72 -%}
+{%- if content.header.priority == "CRITICAL" -%}{%- assign slaHours = 4 -%}
+{%- elsif content.header.priority == "HIGH" -%}{%- assign slaHours = 24 -%}
+{%- elsif content.header.priority == "NORMAL" -%}{%- assign slaHours = 48 -%}
+{%- endif -%}
+
+{%- comment -%} ── Shipping method → carrier + service level ─────────────── {%- endcomment -%}
+{%- assign carrier = "UNKNOWN" -%}
+{%- assign serviceLevel = "STANDARD" -%}
+{%- if content.shipping.method == "FEDEX_GROUND" -%}
+  {%- assign carrier = "FedEx" -%}{%- assign serviceLevel = "Ground" -%}
+{%- elsif content.shipping.method == "FEDEX_OVERNIGHT" -%}
+  {%- assign carrier = "FedEx" -%}{%- assign serviceLevel = "Priority Overnight" -%}
+{%- elsif content.shipping.method == "UPS_2DAY" -%}
+  {%- assign carrier = "UPS" -%}{%- assign serviceLevel = "2nd Day Air" -%}
+{%- elsif content.shipping.method == "USPS_PRIORITY" -%}
+  {%- assign carrier = "USPS" -%}{%- assign serviceLevel = "Priority Mail" -%}
+{%- endif -%}
+
+{%- comment -%} ── Tax rate by state ─────────────────────────────────────── {%- endcomment -%}
+{%- assign taxRate = 0.0 -%}
+{%- unless content.taxExempt -%}
+  {%- if content.shipping.state == "WA" -%}{%- assign taxRate = 0.1025 -%}
+  {%- elsif content.shipping.state == "CA" -%}{%- assign taxRate = 0.0725 -%}
+  {%- elsif content.shipping.state == "TX" -%}{%- assign taxRate = 0.0625 -%}
+  {%- elsif content.shipping.state == "NY" -%}{%- assign taxRate = 0.08 -%}
+  {%- else -%}{%- assign taxRate = 0.06 -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{%- comment -%} ── Per-line calculations: net amount, category subtotals ──── {%- endcomment -%}
+{%- assign subTotal = 0 -%}
+{%- assign hardwareSubTotal = 0 -%}
+{%- assign serviceSubTotal = 0 -%}
+{%- assign totalLineDiscount = 0 -%}
+
+{%- for line in content.lines -%}
+  {%- assign grossLine = line.quantity | Times: line.unitPrice -%}
+  {%- assign lineDiscountAmt = grossLine | Times: line.discountPct | DividedBy: 100.0 -%}
+  {%- assign netLine = grossLine | Minus: lineDiscountAmt -%}
+  {%- assign subTotal = subTotal | Plus: netLine -%}
+  {%- assign totalLineDiscount = totalLineDiscount | Plus: lineDiscountAmt -%}
+  {%- if line.category == "HARDWARE" -%}
+    {%- assign hardwareSubTotal = hardwareSubTotal | Plus: netLine -%}
+  {%- elsif line.category == "SERVICE" -%}
+    {%- assign serviceSubTotal = serviceSubTotal | Plus: netLine -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} ── Apply coupon to subtotal after line discounts ─────────── {%- endcomment -%}
+{%- assign couponAmt = subTotal | Times: couponDiscount | DividedBy: 100.0 -%}
+{%- assign discountedTotal = subTotal | Minus: couponAmt -%}
+{%- assign taxAmount = discountedTotal | Times: taxRate -%}
+{%- assign grandTotal = discountedTotal | Plus: taxAmount -%}
+
+{%- comment -%} ── Order tier based on grand total ───────────────────────── {%- endcomment -%}
+{%- assign orderTier = "STANDARD" -%}
+{%- if grandTotal >= 5000 -%}{%- assign orderTier = "PLATINUM" -%}
+{%- elsif grandTotal >= 1000 -%}{%- assign orderTier = "GOLD" -%}
+{%- elsif grandTotal >= 500 -%}{%- assign orderTier = "SILVER" -%}
+{%- endif -%}
+
+{
+  "orderReference": "{{ content.header.orderNumber }}-{{ content.customer.id }}",
+  "source": {
+    "system": "LOGIC-APPS",
+    "channel": "{{ content.header.channel }}",
+    "orderType": "{{ content.header.orderType }}",
+    "placedAt": "{{ content.header.placedAt }}"
+  },
+  "customer": {
+    "id": "{{ content.customer.id }}",
+    "name": "{{ content.customer.companyName }}",
+    "contact": "{{ content.customer.contactName }}",
+    "email": "{{ content.customer.contactEmail | Downcase }}",
+    "segment": "{{ content.customer.segment }}",
+    "orderTier": "{{ orderTier }}"
+  },
+  "fulfilment": {
+    "priority": "{{ content.header.priority }}",
+    "slaHours": {{ slaHours }},
+    "carrier": "{{ carrier }}",
+    "serviceLevel": "{{ serviceLevel }}",
+    "shippingInstructions": "{{ content.shipping.instructions }}"
+  },
+  "billingAddress": {
+    "line1": "{{ content.billing.address1 }}",
+    "city": "{{ content.billing.city }}",
+    "state": "{{ content.billing.state }}",
+    "zip": "{{ content.billing.zip }}",
+    "country": "{{ content.billing.country }}"
+  },
+  "shippingAddress": {
+    "line1": "{{ content.shipping.address1 }}",
+    "city": "{{ content.shipping.city }}",
+    "state": "{{ content.shipping.state }}",
+    "zip": "{{ content.shipping.zip }}",
+    "country": "{{ content.shipping.country }}"
+  },
+  "lines": [
+    {%- for line in content.lines -%}
+    {%- assign gross = line.quantity | Times: line.unitPrice -%}
+    {%- assign discAmt = gross | Times: line.discountPct | DividedBy: 100.0 -%}
+    {%- assign net = gross | Minus: discAmt -%}
+    {
+      "lineNumber": {{ line.lineNumber }},
+      "sku": "{{ line.sku }}",
+      "description": "{{ line.description }}",
+      "category": "{{ line.category }}",
+      "quantity": {{ line.quantity }},
+      "unitPrice": {{ line.unitPrice }},
+      "discountPct": {{ line.discountPct }},
+      "discountAmount": {{ discAmt | Round: 2 }},
+      "netAmount": {{ net | Round: 2 }}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  "pricing": {
+    "lineSubTotal": {{ subTotal | Round: 2 }},
+    "lineDiscounts": {{ totalLineDiscount | Round: 2 }},
+    "hardwareSubTotal": {{ hardwareSubTotal | Round: 2 }},
+    "serviceSubTotal": {{ serviceSubTotal | Round: 2 }},
+    "couponCode": "{% if content.couponCode != blank %}{{ content.couponCode }}{% else %}NONE{% endif %}",
+    "couponDiscountPct": {{ couponDiscount }},
+    "couponDiscountAmount": {{ couponAmt | Round: 2 }},
+    "taxExempt": {{ content.taxExempt }},
+    "taxState": "{{ content.shipping.state }}",
+    "taxRate": {{ taxRate }},
+    "taxAmount": {{ taxAmount | Round: 2 }},
+    "grandTotal": {{ grandTotal | Round: 2 }}
+  }
+}

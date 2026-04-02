@@ -1,0 +1,38 @@
+{%- comment -%}
+  Template: invoice-flat.liquid
+  Target: DotLiquid 2.0.361 (Azure Logic Apps Standard)
+  Description: JSON-to-JSON — flatten nested invoice structure for downstream API
+  Input: content.* (Logic Apps wrapper)
+{%- endcomment -%}
+{%- assign inv = content.invoice -%}
+{%- assign total = 0 -%}
+{%- for line in inv.lines -%}
+  {%- assign lineAmt = line.quantity | Times: line.rate -%}
+  {%- assign total = total | Plus: lineAmt -%}
+{%- endfor -%}
+{%- assign tax = total | Times: 0.20 -%}
+{%- assign grandTotal = total | Plus: tax -%}
+{
+  "invoiceNumber": "{{ inv.number }}",
+  "invoiceDate": "{{ inv.date }}",
+  "dueDate": "{{ inv.dueDate }}",
+  "vendorName": "{{ inv.vendor.name }}",
+  "vendorVat": "{{ inv.vendor.vatNumber }}",
+  "vendorEmail": "{{ inv.vendor.email }}",
+  "lineItems": [
+    {%- for line in inv.lines -%}
+    {
+      "description": "{{ line.description }}",
+      "quantity": {{ line.quantity }},
+      "rate": {{ line.rate }},
+      "amount": {{ line.quantity | Times: line.rate }}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  "subTotal": {{ total }},
+  "vatRate": 0.20,
+  "vatAmount": {{ tax | Round: 2 }},
+  "grandTotal": {{ grandTotal | Round: 2 }},
+  "currency": "GBP",
+  "status": "{% if grandTotal > 1000 %}HIGH_VALUE{% else %}STANDARD{% endif %}"
+}

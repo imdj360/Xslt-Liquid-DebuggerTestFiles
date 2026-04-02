@@ -1,0 +1,54 @@
+{%- comment -%}
+  Template: customer-to-xml.liquid
+  Target: DotLiquid 2.0.361 (Azure Logic Apps Standard)
+  Description: XML — transform customer JSON to ERP import format
+  Input: content.* (Logic Apps wrapper)
+{%- endcomment -%}
+{%- assign customer = content.customer -%}
+{%- assign addressCount = customer.addresses | Size -%}
+{%- assign primaryAddress = customer.addresses | First -%}
+{%- assign fullName = customer.firstName | Append: " " | Append: customer.lastName -%}
+{%- assign accountType = "STANDARD" -%}
+{%- if customer.annualSpend >= 50000 -%}
+  {%- assign accountType = "PLATINUM" -%}
+{%- elsif customer.annualSpend >= 10000 -%}
+  {%- assign accountType = "GOLD" -%}
+{%- elsif customer.annualSpend >= 2000 -%}
+  {%- assign accountType = "SILVER" -%}
+{%- endif -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomerImport xmlns="urn:contoso:erp:v2">
+  <Customer id="{{ customer.id }}" type="{{ accountType }}">
+    <Name>{{ fullName }}</Name>
+    <Email>{{ customer.email }}</Email>
+    <Phone>{{ customer.phone }}</Phone>
+    <CompanyName>{{ customer.company }}</CompanyName>
+    <Since>{{ customer.memberSince }}</Since>
+    <AnnualSpend currency="{{ customer.currency }}">{{ customer.annualSpend | Round: 2 }}</AnnualSpend>
+    <Addresses count="{{ addressCount }}">
+      {%- for addr in customer.addresses -%}
+      <Address type="{{ addr.type }}"{% if forloop.first %} primary="true"{% endif %}>
+        <Line1>{{ addr.line1 }}</Line1>
+        {%- if addr.line2 != blank -%}
+        <Line2>{{ addr.line2 }}</Line2>
+        {%- endif -%}
+        <City>{{ addr.city }}</City>
+        <State>{{ addr.state }}</State>
+        <PostalCode>{{ addr.postalCode }}</PostalCode>
+        <Country>{{ addr.country }}</Country>
+      </Address>
+      {%- endfor -%}
+    </Addresses>
+    <Tags>
+      {%- assign tags = customer.tags | Split: "," -%}
+      {%- for tag in tags -%}
+      <Tag>{{ tag | Strip }}</Tag>
+      {%- endfor -%}
+    </Tags>
+    <Preferences>
+      <ContactMethod>{{ customer.preferences.contactMethod | Upcase }}</ContactMethod>
+      <Newsletter>{{ customer.preferences.newsletter }}</Newsletter>
+      <Locale>{{ customer.preferences.locale }}</Locale>
+    </Preferences>
+  </Customer>
+</CustomerImport>

@@ -1,0 +1,27 @@
+{
+  "order": {
+    "orderNumber": "ORD-20240315-8821",
+    "storeName": "Contoso Shop",
+    "supportEmail": "support@contoso.com",
+    "customer": {
+      "firstName": "Sarah",
+      "lastName": "Connor"
+    },
+    "items": [
+      { "name": "Wireless Keyboard",  "quantity": 1, "unitPrice": 89.99 },
+      { "name": "USB-C Hub (7-port)", "quantity": 2, "unitPrice": 49.95 },
+      { "name": "Monitor Stand",      "quantity": 1, "unitPrice": 34.50 }
+    ],
+    "discountPct": 10,
+    "taxRate": 0.085,
+    "shipping": "priority",
+    "shippingAddress": {
+      "line1": "742 Evergreen Terrace",
+      "line2": "",
+      "city": "Springfield",
+      "state": "IL",
+      "zip": "62704",
+      "country": "United States"
+    }
+  }
+}

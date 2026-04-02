@@ -1,0 +1,27 @@
+{%- comment -%}
+  Template: person-transform.liquid
+  Target: DotLiquid 2.0.361 (Azure Logic Apps Standard)
+  Description: JSON-to-JSON — remap and normalise person/employee data
+  Input: content.* (Logic Apps wrapper)
+{%- endcomment -%}
+{%- assign fullName = content.firstName | Append: " " | Append: content.lastName -%}
+{%- assign monthly = content.salary | DividedBy: 12.0 -%}
+{%- assign emailNorm = content.email | Downcase -%}
+{%- assign deptCode = content.department | Upcase | Slice: 0, 3 -%}
+{
+  "displayName": "{{ fullName }}",
+  "firstName": "{{ content.firstName }}",
+  "lastName": "{{ content.lastName }}",
+  "email": "{{ emailNorm }}",
+  "dateOfBirth": "{{ content.dateOfBirth }}",
+  "department": {
+    "name": "{{ content.department }}",
+    "code": "{{ deptCode }}"
+  },
+  "compensation": {
+    "annualSalary": {{ content.salary }},
+    "monthlySalary": {{ monthly | Round: 2 }},
+    "currency": "USD"
+  },
+  "status": "{% if content.active %}ACTIVE{% else %}INACTIVE{% endif %}"
+}
