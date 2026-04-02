@@ -1,233 +1,251 @@
 {
   "version": "0.2.0",
   "configurations": [
+
+    // ── DotLiquid Templates ──────────────────────────────────────────────────
+
     {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Saxonnet",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/ShipmentConfv2.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "trace"
-    },
-    {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Compiled",
-      "engine":"compiled",
-      "stylesheet": "/Users/danieljonathan/Workspace/LearnDJ/TestXslt/compiled/ShipmentConfcompiled.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "trace"
-    },
-       {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Compiled Step In",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/step-into-test.xslt",
-      "xml": "${workspaceFolder}/TestFiles/step-into-test.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "log"
-    },
-           {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Saxon Step In",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/step-into-test.xslt",
-      "xml": "${workspaceFolder}/TestFiles/step-into-test.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "trace"
-    },
-    {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Compiled Variable Logging",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/VarLoggingcompiled.xslt",
-      "xml": "${workspaceFolder}/TestFiles/VarLogging.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "log"
-    },
-     {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Saxonnet NS",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/ShipmentConfv2_ns.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf_ns.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "log"
-    },
-    {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Compiled NS",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/ns-mapping-sample.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf_ns.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "log"
-    },
-    {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Saxonnet NS 2",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/ns-mapping-sample.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf_ns.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "log"
-    },
-    {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Saxonnet LA NS",
-      "engine": "saxonnet",
-      "stylesheet": "/Users/danieljonathan/Workspace/LearnDJ/LABlog/LaMapper/Datamapperws/LADataMapperXsltDebugger/Artifacts/Maps/StudentResponse.xslt",
-      "xml": "/Users/danieljonathan/Workspace/LearnDJ/LABlog/LaMapper/Datamapperws/LADataMapperXsltDebugger/Artifacts/SampleData/Student.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "log"
-    },
-    {
-     "type": "xslt",
-      "request": "launch", 
-      "name": "Debug XSLT Saxonnet Adv",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/ShipmentConfv3-foreach.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf.xml",
-      "stopOnEntry": true,
-      "debug": true,
-      "logLevel": "log"
-    },
-    {
-     "type": "xslt",
+      "type": "dotliquid",
       "request": "launch",
-      "name": "Debug XSLT Saxonnet LML Xslt",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/LMLToGeneratedXslt.xslt",
-      "xml": "${workspaceFolder}/TestFiles/LMLStudentSample.xml",
+      "name": "Liquid: invoice-flat (JSON → JSON)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-json/invoice-flat.liquid"
+    },
+    {
+      "type": "dotliquid",
+      "request": "launch",
+      "name": "Liquid: sales-order-transform (JSON → JSON)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-json/sales-order-transform.liquid"
+    },
+    {
+      "type": "dotliquid",
+      "request": "launch",
+      "name": "Liquid: person-transform (JSON → JSON)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-json/person-transform.liquid"
+    },
+    {
+      "type": "dotliquid",
+      "request": "launch",
+      "name": "Liquid: order-to-xml (JSON → XML)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-xml/order-to-xml.liquid"
+    },
+    {
+      "type": "dotliquid",
+      "request": "launch",
+      "name": "Liquid: customer-to-xml (JSON → XML)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-xml/customer-to-xml.liquid"
+    },
+    {
+      "type": "dotliquid",
+      "request": "launch",
+      "name": "Liquid: email-notification (JSON → HTML)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-html/email-notification.liquid"
+    },
+    {
+      "type": "dotliquid",
+      "request": "launch",
+      "name": "Liquid: shipping-label (JSON → plain text)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-text/shipping-label.liquid"
+    },
+
+    // ── XSLT Templates (Saxon / XSLT 2.0 + 3.0) ──────────────────────────────
+
+    {
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Saxonnet",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/ShipmentConfv2.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf.xml",
+      "stopOnEntry": true,
+      "debug": true,
+      "logLevel": "trace"
+    },
+    {
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Saxonnet NS",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/ShipmentConfv2_ns.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf_ns.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Saxonnet NS 2",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/ns-mapping-sample.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf_ns.xml",
+      "stopOnEntry": true,
+      "debug": true,
+      "logLevel": "log"
+    },
+    {
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Saxon Step In",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/step-into-test.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/step-into-test.xml",
+      "stopOnEntry": true,
+      "debug": true,
+      "logLevel": "trace"
+    },
+    {
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Saxonnet Adv (foreach)",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/ShipmentConfv3-foreach.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf.xml",
+      "stopOnEntry": true,
+      "debug": true,
+      "logLevel": "log"
+    },
+    {
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Saxonnet ShipmentConf v3",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/ShipmentConfv3.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf.xml",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/ShipmentConfv3.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Saxonnet Advanced ShipmentConf v2",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/AdvShipmentConfv2.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf.xml",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/AdvShipmentConfv2.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Saxonnet Advanced ShipmentConf v3",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/AdvShipmentConfv3.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf.xml",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/AdvShipmentConfv3.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Saxonnet ForEach Test",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/foreach-test.xslt",
-      "xml": "${workspaceFolder}/TestFiles/foreach-test.xml",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/foreach-test.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/foreach-test.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Saxonnet Variable Logging v1",
-      "engine":"saxonnet",
-      "stylesheet": "${workspaceFolder}/saxon/VarLoggingV1.xslt",
-      "xml": "${workspaceFolder}/TestFiles/VarLogging.xml",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/VarLoggingV1.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/VarLogging.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Saxonnet LML Xslt",
+      "engine": "saxonnet",
+      "stylesheet": "${workspaceFolder}/TestXslt/saxon/LMLToGeneratedXslt.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/LMLStudentSample.xml",
+      "stopOnEntry": true,
+      "debug": true,
+      "logLevel": "log"
+    },
+
+    // ── XSLT Templates (Compiled / XSLT 1.0) ─────────────────────────────────
+
+    {
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Compiled ShipmentConf v1",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/ShipmentConfv1.xslt",
-      "xml": "${workspaceFolder}/TestFiles/ShipmentConf.xml",
+      "engine": "compiled",
+      "stylesheet": "${workspaceFolder}/TestXslt/compiled/ShipmentConfv1.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Compiled Step In",
+      "engine": "compiled",
+      "stylesheet": "${workspaceFolder}/TestXslt/compiled/step-into-test.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/step-into-test.xml",
+      "stopOnEntry": true,
+      "debug": true,
+      "logLevel": "log"
+    },
+    {
+      "type": "xslt",
+      "request": "launch",
+      "name": "Debug XSLT Compiled NS",
+      "engine": "compiled",
+      "stylesheet": "${workspaceFolder}/TestXslt/compiled/ns-mapping-sample.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/ShipmentConf_ns.xml",
+      "stopOnEntry": true,
+      "debug": true,
+      "logLevel": "log"
+    },
+    {
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Compiled Sample",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/sample.xslt",
-      "xml": "${workspaceFolder}/TestFiles/sample.xml",
+      "engine": "compiled",
+      "stylesheet": "${workspaceFolder}/TestXslt/compiled/sample.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/sample.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Compiled Sample Inline C#",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/sample-inline-cs.xslt",
-      "xml": "${workspaceFolder}/TestFiles/sample.xml",
+      "engine": "compiled",
+      "stylesheet": "${workspaceFolder}/TestXslt/compiled/sample-inline-cs.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/sample.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Compiled Variable Logging v1",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/VarLoggingV1.xslt",
-      "xml": "${workspaceFolder}/TestFiles/VarLogging.xml",
+      "engine": "compiled",
+      "stylesheet": "${workspaceFolder}/TestXslt/compiled/VarLoggingV1.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/VarLogging.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
     },
     {
-     "type": "xslt",
+      "type": "xslt",
       "request": "launch",
       "name": "Debug XSLT Compiled ForEach Test",
-      "engine":"compiled",
-      "stylesheet": "${workspaceFolder}/compiled/foreach-test.xslt",
-      "xml": "${workspaceFolder}/TestFiles/foreach-test.xml",
+      "engine": "compiled",
+      "stylesheet": "${workspaceFolder}/TestXslt/compiled/foreach-test.xslt",
+      "xml": "${workspaceFolder}/TestXslt/TestFiles/foreach-test.xml",
       "stopOnEntry": true,
       "debug": true,
       "logLevel": "log"
