@@ -8,9 +8,9 @@ Sample templates and input files for testing the **XSLT Debugger** and **DotLiqu
 
 | Extension | Install |
 | --------- | ------- |
-| **XSLT Debugger** (macOS) | `code --install-extension xsltdebugger-darwin-darwin-arm64-x.x.x.vsix` |
-| **XSLT Debugger** (Windows) | `code --install-extension xsltdebugger-windows-win32-x64-x.x.x.vsix` |
-| **DotLiquid Debugger** | `code --install-extension dotliquid-debugger-x.x.x.vsix` |
+| **XSLT Debugger** (macOS) | `Search "XSLT Debugger Darwin" in VS Code Marketplace` |
+| **XSLT Debugger** (Windows) | `Search "XSLT Debugger Windows" in VS Code Marketplace` |
+| **DotLiquid Debugger** | `Search "DotLiquid Debugger" in VS Code Marketplace` |
 
 ---
 
