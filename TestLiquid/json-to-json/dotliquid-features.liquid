@@ -1,0 +1,128 @@
+{%- comment -%}
+  Article 1 — Feature demonstration template
+  Covers all 6 DotLiquid differences described in Part 1 of the blog series.
+  Pair with article1-features.liquid.json
+{%- endcomment -%}
+
+{%- comment -%} ── Difference 6: content wrapper ──────────────────────────── {%- endcomment -%}
+{%- assign name        = content.name -%}
+{%- assign status      = content.status -%}
+{%- assign score       = content.score -%}
+{%- assign divisor     = content.divisor -%}
+{%- assign negScore    = content.negativeScore -%}
+{%- assign price       = content.price -%}
+{%- assign taxRate     = content.taxRate -%}
+{%- assign tags        = content.tags -%}
+{%- assign words       = content.words -%}
+{%- assign ids         = content.ids -%}
+{%- assign joinDate    = content.joinDate -%}
+{%- assign items       = content.items -%}
+
+{%- comment -%} ── Difference 1: filter casing ────────────────────────────── {%- endcomment -%}
+{%- assign nameUpper   = name | Upcase -%}
+{%- assign nameLower   = name | Downcase -%}
+{%- assign nameCap     = name | Capitalize -%}
+{%- assign wrongCasing = name | upcase -%}
+
+{%- comment -%} ── Difference 2: integer division + negative division ──────── {%- endcomment -%}
+{%- assign intDiv      = score | DividedBy: divisor -%}
+{%- assign floatDiv    = score | DividedBy: 2.0 -%}
+{%- assign negIntDiv   = negScore | DividedBy: divisor -%}
+{%- assign taxAmount   = price | Times: taxRate | DividedBy: 100 -%}
+{%- assign taxAmountF  = price | Times: taxRate | DividedBy: 100.0 -%}
+
+{%- comment -%} ── Difference 3: Sort is case-insensitive ─────────────────── {%- endcomment -%}
+{%- assign sortedTags  = tags | Sort -%}
+{%- assign tagString   = sortedTags | Join: ", " -%}
+
+{%- comment -%} ── Difference 4: Date uses .NET format strings ────────────── {%- endcomment -%}
+{%- assign dateFormatted  = joinDate | Date: "yyyy-MM-dd" -%}
+{%- assign dateDisplay    = joinDate | Date: "MMMM d, yyyy" -%}
+
+{%- comment -%} ── Difference 5a: Compact removes nulls and empty strings ──── {%- endcomment -%}
+{%- assign compacted   = words | Compact -%}
+{%- assign compactStr  = compacted | Join: ", " -%}
+
+{%- comment -%} ── Difference 5b: Uniq removes duplicates ─────────────────── {%- endcomment -%}
+{%- assign unique      = ids | Uniq -%}
+{%- assign uniqueStr   = unique | Join: ", " -%}
+
+{%- comment -%} ── Difference 5c: sum workaround (no Sum filter) ───────────── {%- endcomment -%}
+{%- assign itemTotal = 0 -%}
+{%- for item in items -%}
+  {%- assign lineTotal = item.qty | Times: item.price -%}
+  {%- assign itemTotal = itemTotal | Plus: lineTotal -%}
+{%- endfor -%}
+
+{%- comment -%} ── Conditional ────────────────────────────────────────────── {%- endcomment -%}
+{%- assign tier = "standard" -%}
+{%- if score >= 9 -%}
+  {%- assign tier = "platinum" -%}
+{%- elsif score >= 7 -%}
+  {%- assign tier = "gold" -%}
+{%- elsif score >= 5 -%}
+  {%- assign tier = "silver" -%}
+{%- endif -%}
+
+{
+  "difference6_contentWrapper": {
+    "note": "input accessed via content.* wrapper",
+    "name": "{{ name }}",
+    "status": "{{ status }}"
+  },
+
+  "difference1_filterCasing": {
+    "note": "DotLiquid uses sentence-case filter names",
+    "Upcase_correct": "{{ nameUpper }}",
+    "Downcase_correct": "{{ nameLower }}",
+    "Capitalize_correct": "{{ nameCap }}",
+    "upcase_wrong_passthrough": "{{ wrongCasing }}"
+  },
+
+  "difference2_integerDivision": {
+    "note_shared": "both engines truncate when operands are whole numbers",
+    "score_DividedBy_2_int": {{ intDiv }},
+    "score_DividedBy_2.0_float": {{ floatDiv }},
+    "note_negative": "DotLiquid truncates toward zero; standard Liquid floors toward -inf",
+    "negativeScore_DividedBy_2_dotliquid": {{ negIntDiv }},
+    "note_practical": "use 100.0 not 100 to avoid truncation in tax calculations",
+    "taxAmount_DividedBy_100_truncated": {{ taxAmount }},
+    "taxAmount_DividedBy_100.0_float": {{ taxAmountF }}
+  },
+
+  "difference3_sortCaseInsensitive": {
+    "note": "DotLiquid Sort is case-insensitive — 'apple' sorts before 'Banana', not after",
+    "original": "{{ tags | Join: ', ' }}",
+    "sorted": "{{ tagString }}"
+  },
+
+  "difference4_dateFormat": {
+    "note": "DotLiquid uses .NET format strings, not strftime",
+    "raw": "{{ joinDate }}",
+    "yyyy-MM-dd": "{{ dateFormatted }}",
+    "MMMM d, yyyy": "{{ dateDisplay }}"
+  },
+
+  "difference5_filterAvailability": {
+    "compact": {
+      "note": "Compact removes nulls and empty strings — available in DotLiquid",
+      "original_count": {{ words | Size }},
+      "compacted": "{{ compactStr }}",
+      "compacted_count": {{ compacted | Size }}
+    },
+    "uniq": {
+      "note": "Uniq removes duplicates — available in DotLiquid",
+      "original": "{{ ids | Join: ', ' }}",
+      "unique": "{{ uniqueStr }}"
+    },
+    "sum_workaround": {
+      "note": "Sum filter absent — use for loop with Plus instead",
+      "itemTotal": {{ itemTotal | Round: 2 }}
+    }
+  },
+
+  "conditional": {
+    "score": {{ score }},
+    "tier": "{{ tier }}"
+  }
+}

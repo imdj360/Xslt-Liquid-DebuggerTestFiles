@@ -1,0 +1,18 @@
+{
+  "name": "Ada Lovelace",
+  "status": "active",
+  "score": 7,
+  "divisor": 2,
+  "negativeScore": -7,
+  "price": 499,
+  "taxRate": 7,
+  "tags": ["Banana", "apple", "Cherry", "date", "Elderberry"],
+  "words": ["hello", "", "world", null, "foo", null, "bar"],
+  "ids": [3, 1, 4, 1, 5, 9, 2, 6, 1],
+  "joinDate": "2019-03-15T00:00:00Z",
+  "items": [
+    { "name": "Widget A", "qty": 5,  "price": 24.50 },
+    { "name": "Widget B", "qty": 3,  "price": 99.00 },
+    { "name": "Widget C", "qty": 10, "price": 4.99  }
+  ]
+}

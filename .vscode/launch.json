@@ -25,6 +25,12 @@
     {
       "type": "dotliquid",
       "request": "launch",
+      "name": "Liquid: dotliquid-features (JSON → JSON)",
+      "template": "${workspaceFolder}/TestLiquid/json-to-json/dotliquid-features.liquid"
+    },
+    {
+      "type": "dotliquid",
+      "request": "launch",
       "name": "Liquid: order-to-xml (JSON → XML)",
       "template": "${workspaceFolder}/TestLiquid/json-to-xml/order-to-xml.liquid"
     },
